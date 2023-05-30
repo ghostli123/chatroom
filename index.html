@@ -43,8 +43,10 @@
   });
 
 socket.on('chat message', function(msg) {
+  console.log('received msg:' + msg);
   var parts = msg.split(' ', 2);
   var timestamp = new Date(parts[0]);
+  console.log('timestamp:' + timestamp);
   var message = parts.slice(1).join(' ');
 
   var item = document.createElement('li');

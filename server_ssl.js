@@ -28,12 +28,12 @@ app.get('/', (req, res) => {
 
 io.on('connection', (socket) => {
   socket.on('chat message', (data) => {
-    const timestamp = new Date(data.timestamp);
-    const fullMsg = `${timestamp.toISOString()} ${data.msg}`;
+    // const timestamp = new Date(data.timestamp);
+    const server_timestamp = new Date();
+    const fullMsg = `${server_timestamp.toISOString()} ${data.msg}`;
     io.emit('chat message', fullMsg);
-    const server_timestamp = new Date(); 
 
-    const message = new Message({ message: fullMsg, timestamp: server_timestamp });
+    const message = new Message({ message: `${data.msg}`, timestamp: server_timestamp });
     message.save().catch(err => console.error(err));
   });
 });
