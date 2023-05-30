@@ -27,11 +27,9 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  socket.on('chat message', (msg) => {
-    const timestamp = new Date();
-
-    // Use toLocaleString() to format the date to a string using the current locale
-    const fullMsg = `${timestamp.toLocaleString()}: ${msg}`;
+  socket.on('chat message', (data) => {
+    const timestamp = new Date(data.timestamp);
+    const fullMsg = `${timestamp.toISOString()}: ${data.msg}`;
     io.emit('chat message', fullMsg);
 
     const message = new Message({ message: fullMsg, timestamp: timestamp });
@@ -42,4 +40,3 @@ io.on('connection', (socket) => {
 server.listen(443, () => {
   console.log('listening on *:443');
 });
-

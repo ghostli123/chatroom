@@ -21,7 +21,7 @@
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
-<script>
+    <script>
   var socket = io();
 
   var messages = document.getElementById('messages');
@@ -31,17 +31,27 @@
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     if (input.value) {
-      socket.emit('chat message', input.value);
+      // Get the current time and convert it to a local time string
+      const timestamp = new Date().toLocaleString();
+
+      // Debug: Print the timestamp in the console
+      console.log('Timestamp: ' + timestamp);
+
+      socket.emit('chat message', { msg: input.value, timestamp: timestamp });
       input.value = '';
     }
   });
 
-  socket.on('chat message', function(msg) {
-    var item = document.createElement('li');
-    item.textContent = msg;
-    messages.appendChild(item);
-    window.scrollTo(0, document.body.scrollHeight);
-  });
+socket.on('chat message', function(msg) {
+  var parts = msg.split(':');
+  var timestamp = new Date(parts[0]);
+  var message = parts.slice(1).join(':');
+
+  var item = document.createElement('li');
+  item.textContent = `${timestamp.toLocaleString()}: ${message}`;
+  messages.appendChild(item);
+  window.scrollTo(0, document.body.scrollHeight);
+});
 </script>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9E3JEGYK9X"></script>
