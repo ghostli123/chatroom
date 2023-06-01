@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Socket.IO chat</title>
+    <title>Yang's Chatroom</title>
+    
+    <!-- Add viewport meta tag here -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <style>
       body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
@@ -13,6 +17,7 @@
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages > li { padding: 0.5rem 1rem; }
       #messages > li:nth-child(odd) { background: #efefef; }
+      
     </style>
   </head>
   <body>
@@ -42,15 +47,20 @@
     }
   });
 
+socket.on('set cookie', function(username) {
+    document.cookie = `username=${username};max-age=31536000`; // expires in one year
+});
+
 socket.on('chat message', function(msg) {
   console.log('received msg:' + msg);
-  var parts = msg.split(' ', 2);
+  var parts = msg.split(' ', 3);
   var timestamp = new Date(parts[0]);
   console.log('timestamp:' + timestamp);
-  var message = parts.slice(1).join(' ');
+  var message = parts.slice(2).join(' ');
+  var ip = parts[1];
 
   var item = document.createElement('li');
-  item.textContent = `${timestamp.toLocaleString()}: ${message}`;
+  item.textContent = `${timestamp.toLocaleString()} (${ip}): ${message}`;
   messages.appendChild(item);
   window.scrollTo(0, document.body.scrollHeight);
 });
